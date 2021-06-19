@@ -3,14 +3,21 @@ const conexao = require("../conexao");
 const verificarCadastro = async (req, res, next) => {
     const { nome, email, senha, nome_loja } = req.body;
 
-    if (!nome || !email || !senha || !nome_loja) {
-        return res.status(400).json(`Todos os dados devem ser preenchidos!`);
-    };
+    if (req.user) {
+        const { nome: nomeSalvo, nome_loja: lojaSalva, email: emailSalvo } = req.user;
 
-    if (req.user){
-        const { email: emailSalvo } = req.user;
-
-        if (emailSalvo === email) return next();
+        if (!nome) {
+            req.body.nome = nomeSalvo;
+        };
+        if (!nome_loja) {
+            req.body.nome_loja = lojaSalva;
+        };
+        if (!email) {
+            req.body.email = emailSalvo;
+        };
+        if (emailSalvo === email || !email) {
+            return next()
+        };
     };
 
     try {

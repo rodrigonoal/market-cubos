@@ -10,9 +10,9 @@ const verificarToken = async (req, res, next) => {
         const token = authorization.replace('Bearer', '').trim();
 
         const decodificado = jwt.verify(token, jwtSecret);
-        const { id, nome, email, nome_loja } = decodificado;
+        const { usuario: { id, nome, email, nome_loja } } = decodificado;
 
-        const query = `select * from usuarios where id = $1 and nome = $2 and email = $3 and nome_loja = $4`;
+        const query = `select * from usuarios where id = $1 and nome=$2 and email=$3 and nome_loja=$4`;
 
         const usuarios = await conexao.query(query, [id, nome, email, nome_loja]);
         

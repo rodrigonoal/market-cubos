@@ -14,9 +14,15 @@ const atualizarPerfil = async (req, res) => {
     const { nome, email, senha, nome_loja } = req.body;
 
     try {
-        const hash = (await password.hash(Buffer.from(senha))).toString("hex");
-        const query = `update usuarios set nome=$1, email=$2, senha=$3, nome_loja=$4 where id=$5`;
-        await conexao.query(query, [nome, email, hash, nome_loja, id]);
+        const query = `update usuarios set nome=$1, email=$2, nome_loja=$3${senha ? ', senha=$4 where id=$5' : 'where id=$4'}`;
+
+        if (senha) {
+            const hash = (await password.hash(Buffer.from(senha))).toString("hex");
+
+            await conexao.query(query, [nome, email, nome_loja, hash, id]);
+        } else {
+            await conexao.query(query, [nome, email, nome_loja, id]);
+        };
 
         return res.status(200).json(`Usuário atualizado com sucesso!`);
 
