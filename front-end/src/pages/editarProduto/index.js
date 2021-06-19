@@ -5,8 +5,6 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { InputAdornment, Input } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { put, get } from '../../services/ApiClient';
@@ -56,28 +54,19 @@ export default function EditarProduto() {
         data.id = values.produto.id
         data.usuario_id = values.produto.usuario_id
 
-        data.nome = data.nome ? data.nome : values.produto.nome;
-        data.categoria = data.categoria ? data.categoria : values.produto.categoria;
         if (data.preco) {
-            if (!data.preco.includes('.')) {
+            if (!data.preco.includes(',')) {
                 data.preco = data.preco * 100
             } else {
-                data.preco = Number(data.preco.replace('.', ''))
+                data.preco = Number(data.preco.replace(',', ''))
             };
         } else {
             data.preco = values.produto.preco;
         };
-        data.estoque = data.estoque ? data.estoque : values.produto.estoque;
-        data.descricao = data.descricao ? data.descricao : values.produto.descricao;
-        data.imagem = data.imagem ? data.imagem : values.produto.imagem;
 
-
-
-
-        Number(data.estoque);
+        data.estoque = Number(data.estoque)
 
         console.log(data)
-        console.log(values.produto)
 
 
         try {
@@ -114,23 +103,29 @@ export default function EditarProduto() {
                         className={classes.input}
                         id="nome"
                         label="Nome do produto"
+                        placeholder={values.produto.nome}
+                        focused
                         {...register('nome')}
                     />
                     <div className={(classes.input, classes.listaInputs)}>
-                        <TextField
+                        <Input
                             startAdornment={<InputAdornment position="start">R$</InputAdornment>}
                             className={classes.inputNumber}
                             id="preco"
                             label="Preço"
                             {...register('preco')}
-                            type="number"
+                            placeholder={(values.produto.preco / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }).replace(`R$`, ``)}
+                            focused
+                            type="float"
                         />
-                        <TextField
+                        <Input
                             startAdornment={<InputAdornment position="start">Un</InputAdornment>}
                             className={classes.inputNumber}
                             id="estoque"
                             label="Estoque"
                             {...register('estoque')}
+                            placeholder={values.produto.estoque}
+                            focused
                             type="number"
                         />
                     </div>
@@ -139,6 +134,8 @@ export default function EditarProduto() {
                         id="descricao"
                         label="Descrição do produto"
                         {...register('descricao')}
+                        placeholder={values.produto.descricao}
+                        focused
                     />
                     <TextField
                         className={classes.input}
@@ -146,7 +143,8 @@ export default function EditarProduto() {
                         type="url"
                         label="Imagem"
                         {...register("imagem")}
-
+                        placeholder={values.produto.imagem}
+                        focused
                     />
                 </div>
                 <Divider />

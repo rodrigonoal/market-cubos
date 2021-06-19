@@ -9,7 +9,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { get, post, put } from '../../services/ApiClient';
+import { get, put } from '../../services/ApiClient';
 import CustomBackdrop from '../../components/CustomBackdrop';
 import Alert from '@material-ui/lab/Alert';
 import CustomDrawer from '../../components/CustomDrawer';
@@ -23,13 +23,18 @@ export default function Perfil() {
     const classes = useStyles();
     const history = useHistory();
     const { token } = useAuth()
-    const { register, formState: { errors }, handleSubmit, setValue } = useForm();
+    const { register, formState: { isDirty, errors }, handleSubmit, setValue } = useForm();
     const [values, setValues] = useState({
         erro: '',
         carregando: false,
         editando: false,
         usuario: {}
     });
+
+    if(isDirty){
+        values.editando = true;
+    };
+
 
     const handleOpenEditar = () => {
         setValues({ ...values, editando: !values.editando })
@@ -45,7 +50,6 @@ export default function Perfil() {
 
 
     async function onLoad() {
-
         try {
             const resposta = await get('perfil', token)
 
@@ -64,6 +68,7 @@ export default function Perfil() {
         setValues({ ...values, carregando: false });
     }, []);
 
+   
 
     async function onSubmit(data) {
         setValues({ ...values, erro: '' });
@@ -104,38 +109,41 @@ export default function Perfil() {
     return (
         <div className={classes.body}>
             <CustomDrawer />
-            <div className={classes.perfil}>
+            <form className={classes.produtos} onSubmit={handleSubmit(onSubmit)}>
                 <Typography variant="h4" component="h2" className={classes.subtitulo}>
-                    Perfil
+                    {values.editando ? 'Editar perfil' : 'Perfil'}
                 </Typography>
-                <div className={classes.inputsPerfil}>
-                    <form>
-                        <TextField
-                            id="nome"
-                            label="Nome"
-                            {...register('nome')}
-                            placeholder={values.usuario.nome}
-                            focused
+                <div className={classes.adicionarProduto}>
+                    <TextField
+                        className={classes.input}
+                        id="nome"
+                        label="Seu nome"
+                        placeholder={values.usuario.nome}
+                        focused
+                        {...register('nome')}
+                    />
+                    <TextField
+                        className={classes.input}
+                        id="nome_loja"
+                        label="Nome da Loja"
+                        {...register('nome_loja')}
+                        placeholder={values.usuario.nome_loja}
+                        focused
+                    />
+                    <TextField
+                        className={classes.input}
+                        id="email"
+                        type="email"
+                        label="E-mail"
+                        {...register("email")}
+                        placeholder={values.usuario.email}
+                        focused
+                    />
 
-                        />
-                        <TextField
-                            id="nome_loja"
-                            label="Nome da Loja"
-                            {...register('nome_loja')}
-                            placeholder={values.usuario.nome_loja}
-                            focused
-                        />
-                        <TextField
-                            id="email"
-                            label="E-mail"
-                            {...register('email')}
-                            placeholder={values.usuario.email}
-                            focused
-                        />
-                        {values.editando && <>
-
+                    {values.editando &&
+                        <div className={(classes.input, classes.listaInputs)}>
                             <FormControl
-                                className={classes.input}>
+                                className={classes.inputNumber}>
                                 <InputLabel
                                 >Senha</InputLabel>
                                 <Input
@@ -160,7 +168,7 @@ export default function Perfil() {
                             </FormControl>
 
                             <FormControl
-                                className={classes.input}>
+                                className={classes.inputNumber}>
                                 <InputLabel
                                     htmlFor="standard-adornment-password">Repita a senha</InputLabel>
                                 <Input
@@ -183,33 +191,35 @@ export default function Perfil() {
                                     }
                                 />
                             </FormControl>
-
-                            {values.erro && <Alert severity="error">{values.erro}</Alert>}
-
-                            <Divider />
-                                <Typography
-                                    className={classes.cor}>
-                                    <Link
-                                        href="/produtos">
-                                        CANCELAR
-                                    </Link>
-                                </Typography>
-                        </>}
-
-                            {!values.editando && <Divider />}
-
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={values.editando ? handleSubmit(onSubmit) : handleOpenEditar}
-                            >
-                                EDITAR PERFIL
-                            </Button>
-                        </form>
-                    </div>
+                        </div>}
                 </div>
-                {values.erro && <Alert severity="error">{values.erro}</Alert>}
-                {values.carregando && <CustomBackdrop />}
-            </div>
-            );
+
+                <Divider />
+
+                <div className={classes.botoes}>
+                    {values.editando &&
+                        <>
+                            <Typography
+                                className={classes.cor}>
+                                <Link
+                                    href="/produtos">
+                                    CANCELAR
+                                </Link>
+                            </Typography>
+                        </>
+                    }
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={values.editando ? handleSubmit(onSubmit) : handleOpenEditar}
+                    >
+                        EDITAR PERFIL
+                    </Button>
+                </div>
+            </form>
+            {values.erro && <Alert severity="error">{values.erro}</Alert>}
+            {values.carregando && <CustomBackdrop />}
+        </div>
+    );
 }

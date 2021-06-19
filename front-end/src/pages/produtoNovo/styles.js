@@ -5,10 +5,10 @@ const useStyles = makeStyles((theme) => ({
     background: "#EEEEEE",
   },
   produtos: {
-    padding: "78px 0 25px 212px",
+    padding: "110px 0 0 250px",
   },
   titulo: {
-    marginBottom: 85,
+    marginBottom: 65,
   },
   subtitulo: {
     marginBottom: 57,

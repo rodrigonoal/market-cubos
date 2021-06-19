@@ -4,26 +4,42 @@ const useStyles = makeStyles((theme) => ({
   body: {
     background: "#EEEEEE",
   },
-  perfil: {
-    padding: "78px 0 25px 212px",
+  produtos: {
+    padding: "110px 0 0 250px",
   },
   titulo: {
-    marginBottom: 85,
+    marginBottom: 65,
   },
   subtitulo: {
-    marginBottom: 97,
+    marginBottom: 57,
   },
-  inputsPerfil: {
+  adicionarProduto: {
     display: "flex",
     flexDirection: "column",
-    paddingBottom: 120,
+    paddingBottom: 83,
   },
   input: {
     marginBottom: 48,
     width: 392,
   },
-  button: {
-    marginTop: 35,
+  listaInputs: {
+    display: "flex",
+    marginBottom: 48,
+    gap: 24,
+  },
+  inputNumber: {
+    width: 184,
+  },
+  botoes: {
+    display: "flex",
+    gap: 24,
+    alignItems: "center",
+    marginTop: 41,
+  },
+  cor: {
+    color: "#007DFF",
+  },
+  background: {
     backgroundColor: "#007DFF",
   },
 }));

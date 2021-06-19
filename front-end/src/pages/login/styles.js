@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     background: "#FFFFFF",
-    maxWidth: 392,
-    maxHeight: 562,
+    width: "calc(392-172)",
+    height: "calc(562-168)",
     padding: "80px 86px 88px 86px",
     borderRadius: 16,
     boxShadow:

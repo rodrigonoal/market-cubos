@@ -30,12 +30,13 @@ export default function ProdutoNovo() {
     async function onSubmit(data) {
         setValues({ ...values, erro: '' });
 
-        if (data.preco)
-            if (!data.preco.includes('.' || ',')) {
-                data.preco = data.preco * 100
-            } else {
-                data.preco = Number(data.preco.replace('.', ''))
-            };
+
+        if (!data.preco.includes(',')) {
+            data.preco = data.preco * 100
+        } else {
+            data.preco = Number(data.preco.replace(',', ''))
+        };
+
 
         Number(data.estoque);
 
@@ -78,18 +79,18 @@ export default function ProdutoNovo() {
                         helperText={errors.nome && 'Este campo é obrigatório!'}
                     />
                     <div className={(classes.input, classes.listaInputs)}>
-                        <TextField
+                        <Input
                             startAdornment={<InputAdornment position="start">R$</InputAdornment>}
                             className={classes.inputNumber}
                             id="preco"
                             label="Preço"
                             {...register('preco', { required: true })}
-                            type="number"
+                            type="float"
                             error={errors.preco}
                             helperText={errors.preco && 'Este campo é obrigatório!'}
 
                         />
-                        <TextField
+                        <Input
                             startAdornment={<InputAdornment position="start">Un</InputAdornment>}
                             className={classes.inputNumber}
                             id="estoque"

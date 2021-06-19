@@ -5,22 +5,18 @@ const useStyles = makeStyles((theme) => ({
     background: "#EEEEEE",
   },
   produtos: {
-    padding: "78px 0 25px 212px",
+    padding: "110px 0 0 250px",
   },
   titulo: {
-    marginBottom: 85,
+    marginBottom: 65,
   },
   subtitulo: {
     marginBottom: 57,
   },
-  containerEditar: {
-    display: "flex",
-    gap: 166,
-    marginBottom: 48,
-  },
-  editarProduto: {
+  adicionarProduto: {
     display: "flex",
     flexDirection: "column",
+    paddingBottom: 83,
   },
   input: {
     marginBottom: 48,
@@ -33,11 +29,6 @@ const useStyles = makeStyles((theme) => ({
   },
   inputNumber: {
     width: 184,
-  },
-  imagem: {
-    width: 308,
-    height: 402,
-    borderRadius: 16,
   },
   botoes: {
     display: "flex",

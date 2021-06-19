@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import CancelIcon from '@material-ui/icons/Cancel';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -143,11 +144,11 @@ export default function CustomDrawer() {
               onClick={deslogar}
               to='/'
             >
-              <ListItemIcon style={{ height: '60px' }}>
+              <CancelIcon style={{ marginLeft: '5px',height: '60px', color: '#0000008A', fontSize:'50' }}>
                 <img
                   className={classes.image}
                   src={'/assets/close.svg'}
-                  alt='fechar' /></ListItemIcon>
+                  alt='fechar' /></CancelIcon>
             </NavLink>
           </ListItem>
         </List>
