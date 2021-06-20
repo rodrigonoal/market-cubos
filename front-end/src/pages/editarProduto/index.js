@@ -9,18 +9,16 @@ import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { put, get } from '../../services/ApiClient';
 import CustomBackdrop from '../../components/CustomBackdrop';
-import Alert from '@material-ui/lab/Alert';
 import CustomDrawer from '../../components/CustomDrawer';
 import useAuth from '../../hooks/useAuth';
 import { Divider } from '@material-ui/core';
-
-
+import CustomError from '../../components/CustomError';
 
 export default function EditarProduto() {
     const classes = useStyles();
     const history = useHistory();
     const { token } = useAuth()
-    const { register, formState: { errors }, handleSubmit } = useForm();
+    const { register, handleSubmit } = useForm();
     const [values, setValues] = useState({
         id: window.location.href.split('/')[4],
         produto: {},
@@ -66,8 +64,6 @@ export default function EditarProduto() {
 
         data.estoque = Number(data.estoque)
 
-        console.log(data)
-
 
         try {
             setValues({ ...values, carregando: true });
@@ -98,6 +94,13 @@ export default function EditarProduto() {
                 <Typography variant="h4" component="h2" className={classes.subtitulo}>
                     Editar produto
                 </Typography>
+
+                <div className={classes.containerImagem}>
+                    <img
+                        src={values.produto.imagem ?? 'https://via.placeholder.com/600x500'}
+                        className={classes.imagem}></img>
+                </div>
+
                 <div className={classes.adicionarProduto}>
                     <TextField
                         className={classes.input}
@@ -167,7 +170,7 @@ export default function EditarProduto() {
                     </Button>
                 </div>
             </form>
-            {values.erro && <Alert severity="error">{values.erro}</Alert>}
+            {values.erro && <CustomError erro={values.erro}></CustomError>}
             {values.carregando && <CustomBackdrop />}
         </div>
     );

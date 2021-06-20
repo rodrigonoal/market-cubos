@@ -3,7 +3,6 @@ import useStyles from "./styles";
 import CustomDrawer from '../../components/CustomDrawer';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import Alert from '@material-ui/lab/Alert';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from "@material-ui/core/Divider";
@@ -13,15 +12,14 @@ import { useHistory } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { Typography } from '@material-ui/core';
 import { get } from '../../services/ApiClient';
-import { useForm } from 'react-hook-form';
 import CustomBackdrop from '../../components/CustomBackdrop';
 import CustomDelete from '../../components/CustomDelete';
+import CustomError from '../../components/CustomError';
 
 export default function Produtos() {
     const history = useHistory();
     const classes = useStyles();
     const { token } = useAuth()
-    const { register, formState: { errors }, handleSubmit } = useForm();
     const [values, setValues] = useState({
         erro: '',
         carregando: false,
@@ -30,7 +28,6 @@ export default function Produtos() {
 
 
     async function onLoad() {
-
         try {
             const resposta = await get('produtos', token)
 
@@ -83,7 +80,7 @@ export default function Produtos() {
                                 <CardActionArea>
                                     <CardMedia
                                         className={classes.imagem}
-                                        image={produto.imagem}
+                                        image={produto.imagem ?? 'https://via.placeholder.com/240x190'}
                                         title={produto.descricao}
                                     >
                                     </CardMedia>
@@ -109,7 +106,7 @@ export default function Produtos() {
                                         variant="body2"
                                         component="p"
                                     >
-                                        {produto.estoque + " " + (produto.estoque > 1 ? "UNIDADES" : "UNIDADE")}
+                                       {`${produto.estoque} UNIDADE${produto.estoque === 1 ? '' : 'S'}`}
                                     </Typography>
                                     <Typography
                                         gutterBottom
@@ -133,7 +130,7 @@ export default function Produtos() {
                     ADICIONAR PRODUTO
                 </Button>
             </div>
-            {values.erro && <Alert severity="error">{values.erro}</Alert>}
+            {values.erro && <CustomError erro={values.erro}></CustomError>}
             {values.carregando && <CustomBackdrop />}
         </div>
     );

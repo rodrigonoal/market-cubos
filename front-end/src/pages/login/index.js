@@ -15,8 +15,8 @@ import { useForm } from 'react-hook-form';
 import useAuth from '../../hooks/useAuth';
 import { useHistory } from 'react-router-dom';
 import { post } from '../../services/ApiClient';
-import Alert from '@material-ui/lab/Alert';
 import CustomBackdrop from '../../components/CustomBackdrop';
+import CustomError from '../../components/CustomError';
 
 
 
@@ -134,7 +134,7 @@ export default function Login() {
                     Primeira vez aqui? <Link to="/cadastro">CRIE UMA CONTA</Link>
                 </Typography>
             </form>
-            {values.erro && <Alert severity="error">{values.erro}</Alert>}
+            {values.erro && <CustomError erro={values.erro}></CustomError>}
             {values.carregando && <CustomBackdrop />}
         </div>
 

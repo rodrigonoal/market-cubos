@@ -5,25 +5,23 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { InputAdornment, Input, FormControl, InputLabel, IconButton } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { get, put } from '../../services/ApiClient';
 import CustomBackdrop from '../../components/CustomBackdrop';
-import Alert from '@material-ui/lab/Alert';
 import CustomDrawer from '../../components/CustomDrawer';
 import useAuth from '../../hooks/useAuth';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Divider from "@material-ui/core/Divider";
+import CustomError from '../../components/CustomError';
 
 
 export default function Perfil() {
     const classes = useStyles();
     const history = useHistory();
-    const { token } = useAuth()
-    const { register, formState: { isDirty, errors }, handleSubmit, setValue } = useForm();
+    const { token, deslogar } = useAuth()
+    const { register, formState: { isDirty }, handleSubmit } = useForm();
     const [values, setValues] = useState({
         erro: '',
         carregando: false,
@@ -31,7 +29,7 @@ export default function Perfil() {
         usuario: {}
     });
 
-    if(isDirty){
+    if (isDirty) {
         values.editando = true;
     };
 
@@ -68,7 +66,7 @@ export default function Perfil() {
         setValues({ ...values, carregando: false });
     }, []);
 
-   
+
 
     async function onSubmit(data) {
         setValues({ ...values, erro: '' });
@@ -97,6 +95,8 @@ export default function Perfil() {
 
                 return;
             };
+
+            deslogar()
 
             history.push('/perfil');
 
@@ -193,32 +193,27 @@ export default function Perfil() {
                             </FormControl>
                         </div>}
                 </div>
-
                 <Divider />
-
                 <div className={classes.botoes}>
                     {values.editando &&
-                        <>
-                            <Typography
-                                className={classes.cor}>
-                                <Link
-                                    href="/produtos">
-                                    CANCELAR
-                                </Link>
-                            </Typography>
-                        </>
-                    }
-
+                        <Typography
+                            className={classes.cor}>
+                            <Link
+                                href="/produtos">
+                                CANCELAR
+                            </Link>
+                        </Typography>}
                     <Button
+                        onClick={values.editando ? handleSubmit(onSubmit) : handleOpenEditar}
+                        className={classes.background}
                         variant="contained"
                         color="primary"
-                        onClick={values.editando ? handleSubmit(onSubmit) : handleOpenEditar}
                     >
                         EDITAR PERFIL
                     </Button>
                 </div>
             </form>
-            {values.erro && <Alert severity="error">{values.erro}</Alert>}
+            {values.erro && <CustomError erro={values.erro}></CustomError>}
             {values.carregando && <CustomBackdrop />}
         </div>
     );

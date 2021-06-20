@@ -11,7 +11,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { del } from '../../services/ApiClient';
-import { useHistory } from 'react-router-dom';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CustomDelete({ id, nome }) {
-    const history = useHistory();
     const classes = useStyles();
     const { token } = useAuth();
     const [values, setValues] = useState({
@@ -50,7 +48,7 @@ export default function CustomDelete({ id, nome }) {
             
             setValues({ ...values, carregando: false });
 
-            window.location.reload();
+            resposta && window.location.reload();
         } catch (error) {
             setValues({ ...values, erro: error.message });
 

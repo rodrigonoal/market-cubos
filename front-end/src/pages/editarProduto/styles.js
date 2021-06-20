@@ -1,6 +1,18 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  imagem: {
+    maxHeight: 510,
+  },
+  containerImagem: {
+    position: 'absolute', 
+    top: 100,
+    right: 120, 
+    maxHeight: 500,
+    maxWidth: 600,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
   body: {
     background: "#EEEEEE",
   },
@@ -34,7 +46,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     gap: 24,
     alignItems: "center",
-    marginTop: 41,
+    marginTop: 20,
+    height: 60,
   },
   cor: {
     color: "#007DFF",

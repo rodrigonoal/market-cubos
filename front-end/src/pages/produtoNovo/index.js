@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import useStyles from "./styles";
-import Alert from '@material-ui/lab/Alert';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -13,6 +12,7 @@ import CustomBackdrop from '../../components/CustomBackdrop';
 import { Divider } from '@material-ui/core';
 import CustomDrawer from '../../components/CustomDrawer';
 import useAuth from '../../hooks/useAuth';
+import CustomError from '../../components/CustomError';
 
 
 
@@ -65,8 +65,13 @@ export default function ProdutoNovo() {
     return (
         <div className={classes.body}>
             <CustomDrawer />
-            <form className={classes.produtos} onSubmit={handleSubmit(onSubmit)}>
-                <Typography variant="h4" component="h2" className={classes.subtitulo}>
+            <form
+                className={classes.produtos}
+                onSubmit={handleSubmit(onSubmit)}>
+                <Typography
+                    variant="h4"
+                    component="h2"
+                    className={classes.subtitulo}>
                     Adicionar produto
                 </Typography>
                 <div className={classes.adicionarProduto}>
@@ -138,7 +143,7 @@ export default function ProdutoNovo() {
                     </Button>
                 </div>
             </form>
-            {values.erro && <Alert severity="error">{values.erro}</Alert>}
+            {values.erro && <CustomError erro={values.erro}></CustomError>}
             {values.carregando && <CustomBackdrop />}
         </div>
     );

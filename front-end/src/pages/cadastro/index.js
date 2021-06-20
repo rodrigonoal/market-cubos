@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
 import useStyles from "./styles";
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
@@ -12,13 +11,11 @@ import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { post } from '../../services/ApiClient';
 import CustomBackdrop from '../../components/CustomBackdrop';
-import Alert from '@material-ui/lab/Alert';
+import CustomError from '../../components/CustomError';
 
 
 
@@ -175,7 +172,7 @@ export default function Cadastro() {
                     Já possui uma conta? <Link href="/">ACESSE</Link>
                 </Typography>
             </form>
-            {values.erro && <Alert severity="error">{values.erro}</Alert>}
+            {values.erro && <CustomError erro={values.erro}></CustomError>}
             {values.carregando && <CustomBackdrop />}
         </div>
     );

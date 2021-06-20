@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listaInputs: {
     display: "flex",
-    marginBottom: 48,
+    marginBottom: -20,
     gap: 24,
   },
   inputNumber: {
@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
     gap: 24,
     alignItems: "center",
     marginTop: 41,
+    height: 100
   },
   cor: {
     color: "#007DFF",
