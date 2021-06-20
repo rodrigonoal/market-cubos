@@ -10,11 +10,11 @@ const verificarProduto = async (req, res, next) => {
         req.body.nome = nome ? nome : nomeSalvo
         req.body.estoque = estoque ? estoque : estoqueSalvo
         req.body.preco = preco ? preco : precoSalvo
-        req.body.descricao = descricao ? descircao : descricaoSalva
+        req.body.descricao = descricao ? descricao : descricaoSalva
         req.body.imagem = imagem ? imagem : imagemSalva
     };
 
-    if(req.body.preco < 0 || req.body.estoque < 0) {
+    if(req.body.preco <= 0 || req.body.estoque <= 0) {
         return res.status(400).json(`Preço e estoque devem ser números positivos.`);
     };
     

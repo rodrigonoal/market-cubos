@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useStyles from "./styles";
+import useStyles from "../../components/FormStyle/styles";
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -101,7 +101,7 @@ export default function EditarProduto() {
                         className={classes.imagem}></img>
                 </div>
 
-                <div className={classes.adicionarProduto}>
+                <div className={classes.main}>
                     <TextField
                         className={classes.input}
                         id="nome"

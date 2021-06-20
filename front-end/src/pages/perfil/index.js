@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import useStyles from "./styles";
+import useStyles from "../../components/FormStyle/styles";
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -113,7 +113,7 @@ export default function Perfil() {
                 <Typography variant="h4" component="h2" className={classes.subtitulo}>
                     {values.editando ? 'Editar perfil' : 'Perfil'}
                 </Typography>
-                <div className={classes.adicionarProduto}>
+                <div className={classes.main}>
                     <TextField
                         className={classes.input}
                         id="nome"
@@ -212,6 +212,7 @@ export default function Perfil() {
                         EDITAR PERFIL
                     </Button>
                 </div>
+                <div className={classes.placeholder}/>
             </form>
             {values.erro && <CustomError erro={values.erro}></CustomError>}
             {values.carregando && <CustomBackdrop />}

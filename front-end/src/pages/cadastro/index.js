@@ -76,11 +76,15 @@ export default function Cadastro() {
 
 
     return (
-        <div className={classes.login}>
+        <div className={classes.cadastro}>
             <form
                 className={classes.form}
                 noValidate autoComplete="off"
                 onSubmit={handleSubmit(onSubmit)}>
+                    <Typography
+                    variant="h4"
+                    >
+                    Cadastro</Typography>
                 <TextField
                     className={classes.input}
                     id="nome"

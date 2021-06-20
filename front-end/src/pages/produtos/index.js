@@ -68,19 +68,21 @@ export default function Produtos() {
                     className={classes.listaCards}>
                     {values.produtos.map((produto) => {
                         return (
+                        <>
+                            <CustomDelete
+                                    id={produto.id}
+                                    nome={produto.nome} />
+
                             <Card
                                 className={classes.card}
                                 key={produto.id}
                                 onClick={(e) => cardClick(e, produto.id)}
                             >
-                                <CustomDelete
-                                    id={produto.id}
-                                    nome={produto.nome} />
-
+                                
                                 <CardActionArea>
                                     <CardMedia
                                         className={classes.imagem}
-                                        image={produto.imagem ?? 'https://via.placeholder.com/240x190'}
+                                        image={produto.imagem ?? 'https://via.placeholder.com/600'}
                                         title={produto.descricao}
                                     >
                                     </CardMedia>
@@ -117,6 +119,7 @@ export default function Produtos() {
                                     </Typography>
                                 </CardActions>
                             </Card>
+                            </>
                         );
                     })}
                 </div>

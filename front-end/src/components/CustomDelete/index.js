@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -15,9 +16,10 @@ import { del } from '../../services/ApiClient';
 
 const useStyles = makeStyles((theme) => ({
     button: {
-        margin: theme.spacing(1),
-        borderRadius: '50%',
-        width: '20px',
+        position: 'fixed',
+        marginLeft: 33,
+        marginTop: 10,
+        zIndex: 100,
     },
 }));
 
@@ -45,7 +47,7 @@ export default function CustomDelete({ id, nome }) {
 
         try {
             const resposta = await (await del(`produtos/${id}`, token)).json();
-            
+
             setValues({ ...values, carregando: false });
 
             resposta && window.location.reload();
@@ -60,18 +62,15 @@ export default function CustomDelete({ id, nome }) {
 
 
 
-
-
     return (
         <div>
-            <Button
-                variant="contained"
+
+            <Fab
                 color="secondary"
                 className={classes.button}
-                startIcon={<DeleteIcon />}
-                onClick={(e) => handleClickOpen(e)}
-            >
-            </Button>
+                onClick={(e) => handleClickOpen(e)}>
+                <DeleteIcon />
+            </Fab>
 
             <Dialog
                 open={values.open}

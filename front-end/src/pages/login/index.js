@@ -85,8 +85,7 @@ export default function Login() {
                 onSubmit={handleSubmit(onSubmit)}>
                 <Typography
                     variant="h4"
-                    component="h2"
-                    className={classes.titulo}>
+                >
                     Login</Typography>
                 <TextField
                     className={classes.input}

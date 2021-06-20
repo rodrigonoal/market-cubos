@@ -1,6 +1,18 @@
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
+  imagem: {
+    maxHeight: 510,
+  },
+  containerImagem: {
+    position: 'absolute', 
+    top: 100,
+    right: 120, 
+    maxHeight: 500,
+    maxWidth: 600,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
   body: {
     background: "#EEEEEE",
   },
@@ -13,18 +25,18 @@ const useStyles = makeStyles((theme) => ({
   subtitulo: {
     marginBottom: 57,
   },
-  adicionarProduto: {
+  main: {
     display: "flex",
     flexDirection: "column",
-    paddingBottom: 83,
+    paddingBottom: 30,
   },
   input: {
     marginBottom: 48,
-    width: 392,
+    width: 390,
   },
   listaInputs: {
     display: "flex",
-    marginBottom: -20,
+    marginBottom: 48,
     gap: 24,
   },
   inputNumber: {
@@ -34,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     gap: 24,
     alignItems: "center",
-    marginTop: 41,
+    marginTop: 20,
     height: 100
   },
   cor: {
@@ -43,6 +55,11 @@ const useStyles = makeStyles((theme) => ({
   background: {
     backgroundColor: "#007DFF",
   },
+  placeholder: {
+    width: '100%',
+    height: 80,
+    backgroundColor: '#EEEEEE',
+  }
 }));
 
 export default useStyles;

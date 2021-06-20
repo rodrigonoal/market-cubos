@@ -8,11 +8,18 @@ const useStyles = makeStyles((theme) => ({
   produtos: {
     padding: "78px 0 25px 212px",
   },
-  button: {
-    marginTop: 58,
-    width: 200,
-    backgroundColor: "#007DFF",
+  cardActions: {
+    display: "flex",
+    marginTop: "20%",
+    justifyContent: "space-between",
   },
+  card: {
+    width: 300,
+    height: 450,
+    marginBottom: 13,
+    borderRadius: 24,
+  },
+
   titulo: {
     marginBottom: 85,
   },
@@ -24,20 +31,14 @@ const useStyles = makeStyles((theme) => ({
     gap: 24,
     overflowX: 'auto',
   },
-  card: {
-    maxWidth: 201,
-    minWidth: 201,
-    minHeight: 355,
-    marginBottom: 13,
-    borderRadius: 24,
-  },
   imagem: {
     width: '100%',
     height: 250,
   },
-  cardActions: {
-    display: "flex",
-    justifyContent: "space-between",
+  button: {
+    marginTop: 48,
+    width: 200,
+    backgroundColor: "#007DFF",
   },
   preco: {
     fontWeight: 600,
