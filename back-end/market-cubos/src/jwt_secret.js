@@ -1,1 +1,1 @@
-module.exports = "foraBolsonaro"
+module.exports = "jwtSecret"
