@@ -1,86 +1,176 @@
-const conexao = require("../conexao");
+const knex = require("../conexao");
+const yup = require('yup');
+const { setLocale } = require('yup');
+const { pt } = require('yup-locales');
 
-const cadastrarProduto = async (req, res) => {
-    const { id: usuario_id, nome_loja } = req.user;
-    const { nome, estoque, preco, descricao, categoria, imagem } = req.body;
-
-    try {
-        const query = `insert into produtos (nome, estoque, preco, descricao, categoria, imagem, usuario_id) values ($1, $2, $3, $4, $5, $6, $7)`;
-        await conexao.query(query, [nome, estoque, preco, descricao, categoria, imagem, usuario_id]);
-
-        return res.status(200).json(`O produto ${nome} foi cadastrado na loja: ${nome_loja}`);
-
-    } catch (error) {
-        return res.status(400).json(`Não foi possível cadastrar o produto.`);
-    };
-};
+setLocale(pt);
 
 const listarProdutos = async (req, res) => {
-    const { id } = req.user;
+    const { id: usuario_id } = req.usuario;
+    let { categoria } = req.query;
 
     try {
-        const query = `select * from produtos where usuario_id = $1 group by categoria, id order by preco`;
+        if (!categoria) {
+            categoria = ''
+        }
 
-        const { rows: produtos} = await conexao.query(query, [id]);
+        const produtos = await knex('produtos')
+            .where({ usuario_id })
+            .andWhere('categoria', 'like', `%${categoria}%`);
 
-        return res.status(400).json(produtos)
-
+        return res.status(200).json(produtos);
     } catch (error) {
-        return res.status(400).json(`Não foi possível listar os produtos.`);
-    };
-};
+        return res.status(400).json(error.message);
+    }
+}
 
-const obterProduto = async(req, res) => {
+const obterProduto = async (req, res) => {
+    const { id: usuario_id } = req.usuario;
     const { id } = req.params;
 
     try {
-        const query = `select * from produtos where id=$1`
+        const produto = await knex('produtos')
+            .where({ usuario_id, id })
+            .first()
 
-        const { rows: produto } = await conexao.query(query, [id]);
+        if (!produto) {
+            return res.status(404).json('Produto não encontrado');
+        }
 
-        return res.status(200).json(produto[0])
-        
+        return res.status(200).json(produto);
     } catch (error) {
-        return res.status(400).json(`Não foi possível obter o produto.`);
-    };
-};
+        return res.status(400).json(error.message);
+    }
+}
 
-const atualizarProduto = async(req, res) => {
-    const { id } = req.params;
-    const { nome, estoque, preco, descricao, categoria, imagem } = req.body;
+const cadastrarProduto = async (req, res) => {
+    const { id: usuario_id } = req.usuario;
+    const { nome, estoque, preco, categoria, descricao, imagem } = req.body;
+
+    const schema = yup.object().shape({
+        nome: yup.string().required(),
+        estoque: yup.number().integer().required().positive(),
+        preco: yup.number().integer().required().positive(),
+        descricao: yup.string().required(),
+        categoria: yup.string(),
+        imagem: yup.string()
+    })
 
     try {
-        const query = `update produtos set nome = $1, estoque = $2, preco = $3, descricao = $4, categoria = $5, imagem = $6 where id = $7`
+        await schema.validate(req.body);
 
-        await conexao.query(query, [nome, estoque, preco, descricao, categoria, imagem, id]);
+        const produto = await knex('produtos')
+            .insert({ usuario_id, nome, estoque, preco, categoria, descricao, imagem })
+            .returning('*')
 
-        return res.status(200).json(`Produto atualizado com sucesso!`);
+        if (!produto) {
+            return res.status(400).json('O produto não foi cadastrado');
+        };
+
+        return res.status(200).json(produto[0]);
 
     } catch (error) {
-        return res.status(400).json(`Não foi possível atualizar o produto.`);
-    };
-};
+        return res.status(400).json(error.message);
+    }
+}
+
+const atualizarProduto = async (req, res) => {
+    const { id: usuario_id } = req.usuario;
+    const { id } = req.params;
+    const { nome, estoque, preco, categoria, descricao, imagem } = req.body;
+    
+    const schema = yup.object().shape({
+        nome: yup.string(),
+        estoque: yup.number().integer().positive(),
+        preco: yup.number().integer().positive(),
+        descricao: yup.string(),
+        categoria: yup.string(),
+        imagem: yup.string()
+    })
 
 
-const excluirProduto = async(req, res) => {
+    if (!nome && !estoque && !preco && !categoria && !descricao && !imagem) {
+        return res.status(404).json('Informe ao menos um campo para atualizaçao do produto');
+    }
+
+    try {
+        await schema.validate(req.body);
+
+        const produtoRegistrado = await knex('produtos').where({ usuario_id, id }).first();
+
+        if (!produtoRegistrado) {
+            return res.status(404).json('Produto não encontrado');
+        }
+
+        const body = {};
+
+        if (nome) {
+            body.nome = nome;
+        };
+
+        if (estoque) {
+            body.estoque = estoque;
+        };
+
+        if (categoria) {
+            body.categoria = categoria;
+        };
+
+        if (descricao) {
+            body.descricao = descricao;
+        };
+
+        if (preco) {
+            body.preco = preco;
+        };
+
+        if (imagem) {
+            body.imagem = imagem;
+        };
+
+        const produtoAtualizado = await knex('produtos')
+            .update(body)
+            .where({ id, usuario_id });
+
+        if (produtoAtualizado !== 1) {
+            return res.status(400).json("O produto não foi atualizado");
+        }
+
+        return res.status(200).json('produto foi atualizado com sucesso.');
+    } catch (error) {
+        return res.status(400).json(error.message);
+    }
+}
+
+const excluirProduto = async (req, res) => {
+    const { id: usuario_id } = req.usuario;
     const { id } = req.params;
 
     try {
-        const query = `delete from produtos where id =$1`
-        await conexao.query(query, [id]);
+        const produto = await knex('produtos').where({ usuario_id, id }).first();
 
-        return res.status(200).json(`Produto excluído com sucesso!`);
+        if (!produto) {
+            return res.status(404).json('Produto não encontrado');
+        }
 
+        const produtoExcluido = await knex('produtos')
+            .where({ id })
+            .del()
+
+        if (produtoExcluido !== 1) {
+            return res.status(400).json("O produto não foi excluido");
+        }
+
+        return res.status(200).json('Produto excluido com sucesso');
     } catch (error) {
-        return res.status(400).json(`Não foi possível excluir o produto.`);
-    };
-
-};
+        return res.status(400).json(error.message);
+    }
+}
 
 module.exports = {
-    cadastrarProduto,
     listarProdutos,
     obterProduto,
+    cadastrarProduto,
     atualizarProduto,
     excluirProduto
 }

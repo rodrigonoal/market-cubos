@@ -1,22 +1,35 @@
-const conexao = require("../conexao");
+const knex = require("../conexao");
 const securePassword = require("secure-password");
 const jwt = require('jsonwebtoken');
-const jwtSecret = require("../jwt_secret");
+const jwtSecret = require('../jwt_secret');
+const yup = require('yup');
+const { setLocale } = require('yup');
+const { pt } = require('yup-locales');
+
+setLocale(pt);
 
 const password = securePassword();
 
-const logar = async (req, res) => {
+const login = async (req, res) => {
     const { email, senha } = req.body;
 
+    const schema = yup.object().shape({
+        email: yup.string().email().required(),
+        senha: yup.string().required().min(8)
+    });
+
     try {
-        const query = `select * from usuarios where email = $1`
-        const usuarios = await conexao.query(query, [email]);
+        await schema.validate(req.body);
 
-        const dadosUsuario = usuarios.rows[0]
+        const usuario = await knex('usuarios').where({ email }).first();
 
-        const result = await password.verify(Buffer.from(senha), Buffer.from(dadosUsuario.senha, "hex"));
+        if (!usuario) {
+            return res.status(400).json("O usuario não foi encontrado");
+        }
 
-        switch (result) {
+        const verificarSenha = await password.verify(Buffer.from(senha), Buffer.from(usuario.senha, "hex"));
+
+        switch (verificarSenha) {
             case securePassword.INVALID_UNRECOGNIZED_HASH:
             case securePassword.INVALID:
                 return res.status(400).json('Email ou senha incorretos.');
@@ -25,29 +38,28 @@ const logar = async (req, res) => {
             case securePassword.VALID_NEEDS_REHASH:
                 try {
                     const hashMelhorada = (await password.hash(Buffer.from(senha))).toString("hex");
-                    const query = `update usuarios set senha = $1 where email = $2`;
-                    await conexao.query(query, [hashMelhorada, email]);
+                    await knex('usuarios')
+                        .update({ senha: hashMelhorada })
+                        .where({ id: req.usuario.id });
                 } catch {
+                    return res.status(400).json(error.message);
                 };
                 break;
         };
 
-        const { senha: senhaUsuario, ...usuario} = dadosUsuario
+        const token = jwt.sign({ id: usuario.id }, jwtSecret);
 
-        const token = jwt.sign({
-            usuario
-        }, jwtSecret);
+        const { senha: _, ...dadosUsuario } = usuario;
 
-        const resposta = {
-            usuario,
+        return res.status(200).json({
+            usuario: dadosUsuario,
             token
-        };
-
-        return res.status(200).json(resposta);
-
+        });
     } catch (error) {
-        return res.status(400).json(`Não foi possível realizar o login.`);
-    };
-};
+        return res.status(400).json(error.message);
+    }
+}
 
-module.exports = { logar }
+module.exports = {
+    login
+}

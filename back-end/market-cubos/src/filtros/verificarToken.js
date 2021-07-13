@@ -1,32 +1,34 @@
+const knex = require("../conexao");
 const jwt = require('jsonwebtoken');
 const jwtSecret = require('../jwt_secret');
-const conexao = require('../conexao');
 
-const verificarToken = async (req, res, next) => {
-    
+
+const verificaLogin = async (req, res, next) => {
     const { authorization } = req.headers;
 
+    if (!authorization) {
+        return res.status(401).json('Não autorizado');
+    }
+
     try {
-        const token = authorization.replace('Bearer', '').trim();
+        const token = authorization.replace('Bearer ', '').trim();
 
-        const decodificado = jwt.verify(token, jwtSecret);
-        const { usuario: { id, nome, email, nome_loja } } = decodificado;
+        const { id } = jwt.verify(token, jwtSecret);
 
-        const query = `select * from usuarios where id = $1 and nome=$2 and email=$3 and nome_loja=$4`;
+        const user = await knex('usuarios').where({ id }).first()
 
-        const usuarios = await conexao.query(query, [id, nome, email, nome_loja]);
-        
-        if (usuarios.rowCount === 0) {
-            return res.status(400).json(`Você precisa estar logado para acessar este recurso.`); 
-        };
+        if (user.length === 0) {
+            return res.status(404).json('Usuario não encontrado');
+        }
 
-        req.user = usuarios.rows[0]
+        const { senha, ...usuario } = user;
+
+        req.usuario = usuario;
 
         next();
-
-    } catch(error){
+    } catch (error) {
         return res.status(400).json(error.message);
-    };
-};
+    }
+}
 
-module.exports = verificarToken;
+module.exports = verificaLogin;

@@ -1,3 +1,5 @@
+DROP DATABASE IF EXISTS market_cubos;
+
 create database market_cubos;
 
 create table usuarios (
@@ -5,7 +7,7 @@ create table usuarios (
   nome varchar(255) not null,
   nome_loja varchar(255) not null,
   email varchar(255) not null unique,
-  senha varchar(255) not null
+  senha text not null
 );
 
 create table produtos (

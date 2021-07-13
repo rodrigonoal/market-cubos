@@ -1,1 +1,1 @@
-module.exports = "jwtSecret"
+module.exports = process.env.SENHA_HASH;
